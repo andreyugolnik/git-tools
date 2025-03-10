@@ -24,7 +24,7 @@ export PATH=~/.git-tools:$PATH
 
 Here’s a list of available Git helpers:
 
-- gitsr: Remove submodule.
+- **gitsr**: Remove submodule.
 
 *For more information on each helper function, check the individual documentation in the helper files.*
 
@@ -38,6 +38,6 @@ Feel free to fork this repository and create pull requests. Any improvements or 
 
 ## License
 
-This project is licensed under the MIT License - see the LICENSE file for details.
+This project is licensed under the MIT License - see the `LICENSE` file for details.
 
 Feel free to adjust it as needed! Let me know if you'd like to add more details or specific helpers.
