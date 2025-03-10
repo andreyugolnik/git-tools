@@ -1,0 +1,52 @@
+#!/bin/sh
+#
+# gitsr - safely remove a Git submodule
+#
+# MIT License
+# Author: Andrey A. Ugolnik <andrey@ugolnik.info>
+#
+# DISCLAIMER:
+# This script is provided "as is", without warranty of any kind, express or implied,
+# including but not limited to the warranties of merchantability, fitness for a particular
+# purpose, and noninfringement. In no event shall the author be liable for any claim,
+# damages, or other liability, whether in an action of contract, tort, or otherwise,
+# arising from, out of, or in connection with the script or the use of this script.
+#
+# Usage:
+#   ./gitsr <submodule_path>
+#
+
+SUBMODULE="$1"
+
+if [ -z "$SUBMODULE" ]; then
+    echo "Usage: $0 <submodule_path>"
+    exit 1
+fi
+
+echo "Removing submodule: $SUBMODULE ..."
+
+# Deinitialize the submodule (removes its metadata from .git/config)
+git submodule deinit -f "$SUBMODULE"
+
+# Remove the submodule from the Git index
+git rm -f "$SUBMODULE"
+
+# Remove the submodule directory from .git/modules/
+rm -rf "$(git config --file .git/config --get submodule."$SUBMODULE".path)"
+
+# Remove the submodule section from .git/config
+git config --remove-section submodule."$SUBMODULE" 2>/dev/null
+
+# Escape forward slashes in the submodule path
+ESCAPED_SUBMODULE=$(printf '%s' "$SUBMODULE" | sed 's/[\/&]/\\&/g')
+
+# FIXME: update command to remove the section without affecting other sections
+# Remove the submodule entry from .gitmodules, including the section header
+# sed -i '' -e "/^\[submodule \"$ESCAPED_SUBMODULE\"\]\$/,/^\[/d" .gitmodules
+# sed -i '' -e "/^\[submodule \"$ESCAPED_SUBMODULE\"\]$/,/^\[submodule /{ /^\[submodule /!d; }" .gitmodules
+
+# Commit the changes to keep the repository clean
+git add .gitmodules
+git commit -m "Removed submodule $SUBMODULE"
+
+echo "Submodule $SUBMODULE removed successfully!"
