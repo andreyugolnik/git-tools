@@ -37,16 +37,12 @@ rm -rf "$(git config --file .git/config --get submodule."$SUBMODULE".path)"
 # Remove the submodule section from .git/config
 git config --remove-section submodule."$SUBMODULE" 2>/dev/null
 
-# Escape forward slashes in the submodule path
-ESCAPED_SUBMODULE=$(printf '%s' "$SUBMODULE" | sed 's/[\/&]/\\&/g')
-
 # FIXME: update command to remove the section without affecting other sections
 # Remove the submodule entry from .gitmodules, including the section header
-# sed -i '' -e "/^\[submodule \"$ESCAPED_SUBMODULE\"\]\$/,/^\[/d" .gitmodules
-# sed -i '' -e "/^\[submodule \"$ESCAPED_SUBMODULE\"\]$/,/^\[submodule /{ /^\[submodule /!d; }" .gitmodules
+sed -i '' -e '\|\[submodule "$SUBMODULE"\]|,\|\[submodule |{/\[submodule */!d;}' .gitmodules
 
 # Commit the changes to keep the repository clean
 git add .gitmodules
-git commit -m "Removed submodule $SUBMODULE"
+git commit -m "chore(submodule)!: remove $SUBMODULE submodule"
 
 echo "Submodule $SUBMODULE removed successfully!"
