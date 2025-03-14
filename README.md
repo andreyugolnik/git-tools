@@ -11,7 +11,7 @@ This script is provided "as is", without warranty of any kind, express or implie
 To use these helpers, simply copy the files to your preferred location, and source them in your configuration file.
 
 ```sh
-git clone https://github.com/andreyugolnik/git-tools.git ~/.git-tools
+git clone https://github.com/reybits/git-tools.git ~/.git-tools
 ```
 
 Then, add the following to your `.bashrc`, `.zshrc`, or appropriate shell configuration file:
